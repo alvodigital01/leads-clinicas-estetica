@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Leads Estética Londrina — Prospecção WhatsApp</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: #0a0e1a;
+    color: #e7eaf2;
+    line-height: 1.5;
+    min-height: 100vh;
+  }
+  .header {
+    background: linear-gradient(135deg, #0d1424 0%, #131c33 100%);
+    border-bottom: 1px solid #1f2a44;
+    padding: 24px 20px;
+    position: sticky; top: 0; z-index: 50;
+    backdrop-filter: blur(8px);
+  }
+  .header-inner { max-width: 1280px; margin: 0 auto; }
+  h1 { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+  h1 .accent { color: #25d366; }
+  .subtitle { color: #8a93a8; font-size: 13px; margin-bottom: 16px; }
+  .stats { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
+  .stat {
+    background: #131c33; padding: 10px 14px; border-radius: 8px;
+    border: 1px solid #1f2a44;
+    display: flex; flex-direction: column; min-width: 120px;
+  }
+  .stat-label { font-size: 11px; color: #8a93a8; text-transform: uppercase; letter-spacing: 0.5px; }
+  .stat-value { font-size: 20px; font-weight: 700; margin-top: 2px; }
+  .stat-value.hot { color: #ff6b6b; }
+  .stat-value.warm { color: #ffa94d; }
+  .stat-value.contacted { color: #25d366; }
+  .controls { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+  .filter-btn {
+    background: #131c33; color: #e7eaf2; border: 1px solid #1f2a44;
+    padding: 8px 14px; border-radius: 6px; cursor: pointer; font-size: 13px;
+    transition: all 0.15s;
+  }
+  .filter-btn:hover { background: #1c2742; }
+  .filter-btn.active { background: #2563eb; border-color: #2563eb; }
+  .search {
+    background: #131c33; border: 1px solid #1f2a44; color: #e7eaf2;
+    padding: 8px 14px; border-radius: 6px; font-size: 13px; flex: 1; min-width: 200px;
+  }
+  .export-btn {
+    background: #1f3a2e; color: #25d366; border: 1px solid #25d366;
+    padding: 8px 14px; border-radius: 6px; cursor: pointer; font-size: 13px;
+    transition: all 0.15s;
+  }
+  .export-btn:hover { background: #25d366; color: #0a0e1a; }
+
+  .container { max-width: 1280px; margin: 24px auto; padding: 0 20px; }
+  .grid {
+    display: grid; gap: 16px;
+    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  }
+  .card {
+    background: #131c33; border: 1px solid #1f2a44; border-radius: 12px;
+    padding: 18px; display: flex; flex-direction: column; gap: 12px;
+    transition: all 0.2s;
+    position: relative;
+  }
+  .card:hover { border-color: #2c3a5e; transform: translateY(-2px); }
+  .card.contacted { opacity: 0.55; }
+  .card.contacted::after {
+    content: '✓ Contatado'; position: absolute; top: 12px; right: 12px;
+    background: #25d366; color: #0a0e1a; font-size: 10px; font-weight: 700;
+    padding: 3px 8px; border-radius: 4px; letter-spacing: 0.5px;
+  }
+  .card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+  .card-name { font-size: 15px; font-weight: 600; line-height: 1.3; }
+  .badge {
+    font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 4px;
+    text-transform: uppercase; letter-spacing: 0.5px; flex-shrink: 0;
+  }
+  .badge.quente { background: #ff6b6b; color: #1a0606; }
+  .badge.morno { background: #ffa94d; color: #1a0e06; }
+  .meta { display: flex; gap: 12px; font-size: 12px; color: #8a93a8; flex-wrap: wrap; }
+  .meta span { display: inline-flex; align-items: center; gap: 4px; }
+  .meta .star { color: #ffd43b; }
+  .specialty {
+    background: #1c2742; color: #93b1ff; padding: 4px 10px;
+    border-radius: 4px; font-size: 11px; font-weight: 600; align-self: flex-start;
+  }
+  .pain-box {
+    background: #1f1426; border-left: 3px solid #ff6b6b;
+    padding: 10px 12px; border-radius: 4px; font-size: 12.5px;
+    color: #d4c5d0; line-height: 1.45;
+  }
+  .pain-box strong { color: #ff8787; display: block; margin-bottom: 3px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .site-status { font-size: 11px; color: #8a93a8; }
+  .site-status .tag {
+    display: inline-block; padding: 2px 6px; border-radius: 3px;
+    font-weight: 600; margin-left: 4px;
+  }
+  .site-status .tag.no_site { background: #4a1a1a; color: #ff8787; }
+  .site-status .tag.linktree { background: #4a3a1a; color: #ffd43b; }
+  .site-status .tag.instagram_only { background: #3a1a4a; color: #d18cff; }
+  .site-status .tag.site_proprio { background: #1a3a2a; color: #51cf66; }
+  .actions { display: flex; gap: 8px; margin-top: 4px; }
+  .btn {
+    flex: 1; padding: 10px; border-radius: 6px; border: none;
+    font-size: 13px; font-weight: 600; cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    transition: all 0.15s;
+  }
+  .btn-wa { background: #25d366; color: #0a0e1a; }
+  .btn-wa:hover { background: #20bd58; }
+  .btn-copy { background: #1f2a44; color: #e7eaf2; }
+  .btn-copy:hover { background: #2c3a5e; }
+  .btn-done { background: transparent; color: #8a93a8; border: 1px solid #1f2a44; padding: 8px 12px; }
+  .btn-done:hover { color: #25d366; border-color: #25d366; }
+  .btn-done.active { background: #1f3a2e; color: #25d366; border-color: #25d366; }
+  .ig-link {
+    font-size: 11px; color: #6b7693; text-decoration: none;
+    word-break: break-all;
+  }
+  .ig-link:hover { color: #93b1ff; }
+  .toast {
+    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+    background: #25d366; color: #0a0e1a; padding: 12px 24px;
+    border-radius: 8px; font-weight: 600; font-size: 14px;
+    opacity: 0; transition: opacity 0.2s; z-index: 100;
+    pointer-events: none;
+  }
+  .toast.show { opacity: 1; }
+  .empty {
+    text-align: center; padding: 60px 20px; color: #6b7693;
+    grid-column: 1/-1;
+  }
+  .footer {
+    text-align: center; padding: 30px 20px; color: #6b7693; font-size: 12px;
+  }
+  @media (max-width: 600px) {
+    .grid { grid-template-columns: 1fr; }
+    h1 { font-size: 18px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-inner">
+    <h1>Leads Estética Avançada Londrina <span class="accent">— WhatsApp Ready</span></h1>
+    <p class="subtitle">50 clínicas qualificadas com WhatsApp celular • mensagem pronta • clica e envia</p>
+    <div class="stats">
+      <div class="stat"><span class="stat-label">Total</span><span class="stat-value" id="stat-total">0</span></div>
+      <div class="stat"><span class="stat-label">Quentes</span><span class="stat-value hot" id="stat-quente">0</span></div>
+      <div class="stat"><span class="stat-label">Mornos</span><span class="stat-value warm" id="stat-morno">0</span></div>
+      <div class="stat"><span class="stat-label">Contatados</span><span class="stat-value contacted" id="stat-done">0</span></div>
+    </div>
+    <div class="controls">
+      <button class="filter-btn active" data-filter="all">Todos</button>
+      <button class="filter-btn" data-filter="quente">🔥 Quentes</button>
+      <button class="filter-btn" data-filter="morno">🟧 Mornos</button>
+      <button class="filter-btn" data-filter="pending">⏳ Não contatados</button>
+      <input class="search" id="search" placeholder="Buscar nome, bairro, especialidade...">
+      <button class="export-btn" id="exportBtn">⬇ Baixar CSV</button>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+  <div class="grid" id="grid"></div>
+  <div class="footer">Coletado via Apify Google Maps Scraper • 28/04/2026 • 50 leads filtrados de 116 brutos<br>Filtros aplicados: WhatsApp celular (DDD 43), Londrina/região, ≥5 avaliações Google, nicho estética avançada</div>
+</div>
+
+<div class="toast" id="toast">Mensagem copiada</div>
+
+<script>
+const LEADS = [
+  // QUENTES (score >= 50)
+  {n:"Instituto Marques e Marcomini", d:"", esp:"Harmonização Orofacial", sc:58, p:"quente", rv:98, r:4.9, b:"Bancários", w:"5543991906940", wf:"+55 43 99190-6940", st:"no_site", url:"", t:"harmonização orofacial"},
+  {n:"Dra. Tatiana Albino Castanheira", d:"Tatiana", esp:"Harmonização Orofacial", sc:54, p:"quente", rv:20, r:5, b:"Jardim Jockey Club", w:"5543999239723", wf:"+55 43 99923-9723", st:"no_site", url:"", t:"harmonização orofacial"},
+  {n:"Dra Larissa Rodrigues Estética Avançada", d:"Larissa", esp:"Estética Avançada + HOF", sc:54, p:"quente", rv:26, r:5, b:"Vila Brasil", w:"5543991772717", wf:"+55 43 99177-2717", st:"no_site", url:"", t:"harmonização facial"},
+  {n:"Dra. Michele Esteves Ortodontia e Harmonização", d:"Michele", esp:"Harmonização Facial", sc:54, p:"quente", rv:23, r:5, b:"Centro", w:"5543996315045", wf:"+55 43 99631-5045", st:"no_site", url:"", t:"harmonização facial"},
+  {n:"Dra. Camila Silva — Botox e Estética", d:"Camila", esp:"Botox + Harmonização", sc:53, p:"quente", rv:77, r:4.9, b:"Jardim Londrilar", w:"5543991386660", wf:"+55 43 99138-6660", st:"linktree", url:"https://beacons.ai/dracamilasilva_biomedica/", t:"harmonização facial"},
+  {n:"Dra. Ketlem Catucci — Harmonização", d:"Ketlem", esp:"Harmonização Facial e Glúteos", sc:51, p:"quente", rv:18, r:5, b:"Quebec", w:"5543991778575", wf:"+55 43 99177-8575", st:"no_site", url:"", t:"harmonização facial"},
+  {n:"Áurea Jácome — Harmonização Facial", d:"Áurea", esp:"Harmonização Facial", sc:51, p:"quente", rv:15, r:5, b:"Centro", w:"5543991619958", wf:"+55 43 99161-9958", st:"no_site", url:"", t:"harmonização facial"},
+  {n:"Dra. Lorena Beatriz — Botox/Preenchimento/HOF", d:"Lorena", esp:"HOF + Bioestimulador", sc:51, p:"quente", rv:16, r:5, b:"Jardim São Jorge", w:"5543991915600", wf:"+55 43 99191-5600", st:"no_site", url:"", t:"preenchimento facial"},
+  {n:"Clínica Blenda Hyedra — Estética Avançada", d:"Blenda", esp:"Estética Avançada", sc:51, p:"quente", rv:11, r:5, b:"Bela Suiça", w:"5543999209965", wf:"+55 43 99920-9965", st:"no_site", url:"", t:"clínica de estética avançada"},
+  {n:"Dr. Erick Rodrigues — Harmonização Facial e Corporal", d:"Erick", esp:"Harmonização Facial e Corporal", sc:51, p:"quente", rv:18, r:5, b:"Ipiranga", w:"5543988071849", wf:"+55 43 98807-1849", st:"no_site", url:"", t:"harmonização facial"},
+  {n:"Luciane Prado — Harmonização Facial & Ozonioterapia", d:"Luciane", esp:"Harmonização + Ozonio", sc:51, p:"quente", rv:8, r:5, b:"Centro", w:"5543984375923", wf:"+55 43 98437-5923", st:"no_site", url:"", t:"harmonização facial"},
+  {n:"Clínica Beatriz Alves — Estética Avançada", d:"Beatriz", esp:"Harmonização + Estética Avançada", sc:51, p:"quente", rv:13, r:5, b:"Centro", w:"5543991679371", wf:"+55 43 99167-9371", st:"no_site", url:"", t:"harmonização facial"},
+  {n:"Dra Anniely Sac — Estética Avançada", d:"Anniely", esp:"Estética Avançada", sc:51, p:"quente", rv:16, r:5, b:"Conj. Hab. Violim", w:"5543998170899", wf:"+55 43 99817-0899", st:"no_site", url:"", t:"biomédica esteta"},
+  // MORNOS (score 30-49)
+  {n:"EG Estética Facial Avançada", d:"", esp:"Estética Facial Avançada", sc:49, p:"morno", rv:49, r:5, b:"Presidente", w:"5543996522877", wf:"+55 43 99652-2877", st:"linktree", url:"https://linktr.ee/EGestetica", t:"preenchimento facial"},
+  {n:"Dentista Dra. Thaís Tenan — HOF Londrina", d:"Thaís", esp:"Harmonização Orofacial", sc:47, p:"morno", rv:35, r:5, b:"Universitário", w:"5543991178080", wf:"+55 43 99117-8080", st:"instagram_only", url:"https://www.instagram.com/thaistenan_dentista/", t:"harmonização orofacial"},
+  {n:"Dra. Fernanda Martinelli — Harmonização Facial", d:"Fernanda", esp:"Harmonização Facial", sc:47, p:"morno", rv:30, r:5, b:"Ipiranga", w:"5543998364424", wf:"+55 43 99836-4424", st:"instagram_only", url:"https://www.instagram.com/drafernandamartinelli/", t:"harmonização orofacial"},
+  {n:"Clínica Arruda — Estética Avançada", d:"", esp:"Estética Avançada", sc:46, p:"morno", rv:10, r:5, b:"Presidente", w:"5543991139096", wf:"+55 43 99113-9096", st:"linktree", url:"https://linktr.ee/arrudaesteticaavancada", t:"clínica de estética avançada"},
+  {n:"Estética Avançada Everediana Canezin", d:"Everediana", esp:"Estética Avançada", sc:46, p:"morno", rv:13, r:4.7, b:"Centro", w:"5543999949706", wf:"+55 43 99994-9706", st:"no_site", url:"", t:"clínica de estética avançada"},
+  {n:"CRIO HARMONIZE Londrina — Dra. Fernanda Bertagnoli", d:"Fernanda", esp:"Harmonização Facial", sc:46, p:"morno", rv:17, r:5, b:"Centro", w:"5543984221006", wf:"+55 43 98422-1006", st:"linktree", url:"https://api.whatsapp.com/send?phone=5543984221006", t:"harmonização facial"},
+  {n:"Academia da Face — Dra Isadora Fabris", d:"Isadora", esp:"Harmonização Facial", sc:46, p:"morno", rv:47, r:4.9, b:"Palhano 1", w:"5543999410974", wf:"+55 43 99941-0974", st:"no_site", url:"", t:"harmonização facial"},
+  {n:"Franciele Sofiati — Biomédica Esteta", d:"Franciele", esp:"Biomedicina Estética", sc:46, p:"morno", rv:21, r:5, b:"Centro", w:"5543991043536", wf:"+55 43 99104-3536", st:"no_site", url:"", t:"biomédica esteta"},
+  {n:"Silvia Neves ProEstética", d:"Silvia", esp:"Estética Avançada", sc:46, p:"morno", rv:21, r:5, b:"Jardim Europa", w:"5543996037812", wf:"+55 43 99603-7812", st:"no_site", url:"", t:"preenchimento facial"},
+  {n:"Spaço Santé — Cuidados Estéticos", d:"", esp:"Estética Avançada", sc:46, p:"morno", rv:37, r:4.9, b:"Londrilar", w:"5543999084148", wf:"+55 43 99908-4148", st:"no_site", url:"", t:"preenchimento facial"},
+  {n:"Lígia Zogaib Beccatti — Odonto + HOF", d:"Lígia", esp:"Harmonização Orofacial", sc:44, p:"morno", rv:16, r:5, b:"Guanabara", w:"5543991038371", wf:"+55 43 99103-8371", st:"instagram_only", url:"https://www.instagram.com/draligiazogaibbeccatti/", t:"harmonização orofacial"},
+  {n:"Thalyta Marques Estética Avançada", d:"Thalyta", esp:"Estética Avançada", sc:44, p:"morno", rv:5, r:5, b:"Antares", w:"5543996682608", wf:"+55 43 99668-2608", st:"instagram_only", url:"http://www.instagram.com/thalytamarques.estetica", t:"preenchimento facial"},
+  {n:"Dra Kawana Soares — HOF, Botox, Lipo sem Corte", d:"Kawana", esp:"Harmonização Facial + Lipo", sc:44, p:"morno", rv:7, r:5, b:"Paraíso", w:"5543996135569", wf:"+55 43 99613-5569", st:"instagram_only", url:"https://instagram.com/biomedicakawanasoares", t:"preenchimento facial"},
+  {n:"Dra. Carolina Sprizon — Ortodontia/Bruxismo/HOF", d:"Carolina", esp:"Ortodontia + HOF", sc:43, p:"morno", rv:10, r:5, b:"Palhano 2", w:"5543991832001", wf:"+55 43 99183-2001", st:"no_site", url:"", t:"harmonização orofacial"},
+  {n:"Dra. Isabella Bidoia", d:"Isabella", esp:"Estética Facial", sc:43, p:"morno", rv:8, r:5, b:"Jardim Londrilar", w:"5543996305933", wf:"+55 43 99630-5933", st:"no_site", url:"", t:"harmonização facial"},
+  {n:"Dra. Amanda Quintino — Biomédica Esteta", d:"Amanda", esp:"Biomedicina Estética", sc:43, p:"morno", rv:13, r:5, b:"Mediterrâneo", w:"5543991180444", wf:"+55 43 99118-0444", st:"no_site", url:"", t:"biomédica esteta"},
+  {n:"Lígia Luz — Estética & Equilíbrio", d:"Lígia", esp:"Estética Avançada", sc:43, p:"morno", rv:10, r:5, b:"Royal Golf Residence", w:"5543998605500", wf:"+55 43 99860-5500", st:"no_site", url:"", t:"clínica de estética avançada"},
+  {n:"Dra. Beatriz Brugnara — Dentista/HOF", d:"Beatriz", esp:"Harmonização Facial", sc:43, p:"morno", rv:11, r:5, b:"Palhano 2", w:"5543974006116", wf:"+55 43 97400-6116", st:"no_site", url:"", t:"harmonização facial"},
+  {n:"Dra. Izabely Castro — Biomédica", d:"Izabely", esp:"Biomedicina Estética", sc:43, p:"morno", rv:18, r:5, b:"Centro", w:"5543984811556", wf:"+55 43 98481-1556", st:"no_site", url:"", t:"biomédica esteta"},
+  {n:"Juliana Paiva Saúde & Beleza", d:"Juliana", esp:"Estética + Preenchimento", sc:43, p:"morno", rv:75, r:5, b:"Centro", w:"5543999270002", wf:"+55 43 99927-0002", st:"instagram_only", url:"http://instagram.com/studio_juliana_paiva", t:"preenchimento facial"},
+  {n:"Dra. Mayara Figueiredo — Biomedicina", d:"Mayara", esp:"Biomedicina Estética", sc:41, p:"morno", rv:30, r:5, b:"Centro", w:"5543999637297", wf:"+55 43 99963-7297", st:"linktree", url:"https://taplink.cc/dramayarafigueiredo", t:"biomédica esteta"},
+  {n:"Luanna Carvalho Esteticista", d:"Luanna", esp:"Estética Avançada", sc:41, p:"morno", rv:31, r:5, b:"Bandeirantes", w:"5543984768041", wf:"+55 43 98476-8041", st:"linktree", url:"https://taggo.one/esteticaluanna", t:"clínica de estética avançada"},
+  {n:"Face Doctor Londrina — Catuaí Shopping", d:"", esp:"Harmonização Facial", sc:41, p:"morno", rv:49, r:4.6, b:"Palhano 2", w:"5543991060070", wf:"+55 43 99106-0070", st:"no_site", url:"", t:"harmonização facial"},
+  {n:"Hilário Odontologia", d:"", esp:"Odontologia + HOF", sc:39, p:"morno", rv:43, r:5, b:"Rodocentro", w:"5543999966575", wf:"+55 43 99996-6575", st:"instagram_only", url:"https://www.instagram.com/hilario.odontologia/", t:"harmonização orofacial"},
+  {n:"Estética Danielle Silva", d:"Danielle", esp:"Estética Avançada", sc:39, p:"morno", rv:38, r:5, b:"Jardim Alvorada", w:"5543999183418", wf:"+55 43 99918-3418", st:"instagram_only", url:"https://instagram.com/esteticadaniellesilva", t:"clínica de estética avançada"},
+  {n:"Dra Emine Janene — Biomédica Esteta", d:"Emine", esp:"Biomedicina Estética", sc:39, p:"morno", rv:20, r:5, b:"Jardim Londrilar", w:"5543996217794", wf:"+55 43 99621-7794", st:"instagram_only", url:"https://www.instagram.com/draeminejanene/", t:"biomédica esteta"},
+  {n:"Aroma Rosa — Beleza e Bem Estar", d:"", esp:"Estética", sc:39, p:"morno", rv:30, r:5, b:"Igapó", w:"5543999557440", wf:"+55 43 99955-7440", st:"instagram_only", url:"https://www.instagram.com/aromarosastudio_debeleza", t:"biomédica esteta"},
+  {n:"Magrass Londrina Norte", d:"", esp:"Estética + Emagrecimento", sc:39, p:"morno", rv:31, r:4.9, b:"Vivi Xavier", w:"5543999888397", wf:"+55 43 99988-8397", st:"instagram_only", url:"https://instagram.com/magrasslondrinazonanorte", t:"biomédica esteta"},
+  {n:"Dra. Juliana Sanchez — Biomédica Esteta", d:"Juliana", esp:"Biomedicina Estética", sc:38, p:"morno", rv:8, r:5, b:"Centro", w:"5543984144963", wf:"+55 43 98414-4963", st:"linktree", url:"https://bio.site/jusanchez", t:"biomédica esteta"},
+  {n:"Clínica Estétic Londrina", d:"", esp:"Estética Avançada", sc:38, p:"morno", rv:13, r:5, b:"Centro", w:"5543991675858", wf:"+55 43 99167-5858", st:"linktree", url:"https://bio.site/ClinicaEsteticLondrina", t:"preenchimento facial"},
+  {n:"Sueli Oliveira Estética", d:"Sueli", esp:"Estética", sc:38, p:"morno", rv:10, r:5, b:"Vitória Régia", w:"5543991564694", wf:"+55 43 99156-4694", st:"linktree", url:"https://suelioliveiraestetica.my.canva.site", t:"biomédica esteta"},
+  {n:"Dra. Amanda Magalhães — Biomédica | Clínica Chue", d:"Amanda", esp:"Biomedicina Estética", sc:36, p:"morno", rv:10, r:5, b:"Palhano 2", w:"5543988367156", wf:"+55 43 98836-7156", st:"instagram_only", url:"https://www.instagram.com/dra.amandamglh/", t:"biomédica esteta"},
+  {n:"Dra Karla Lorena — Biomédica Esteta", d:"Karla", esp:"Biomedicina Estética", sc:36, p:"morno", rv:16, r:5, b:"Londrilar", w:"5543984091414", wf:"+55 43 98409-1414", st:"instagram_only", url:"https://www.instagram.com/drakarlalorena/", t:"biomédica esteta"},
+  {n:"Ozonioterapia Londrina | Valeria Pais", d:"Valeria", esp:"Estética + Ozonioterapia", sc:36, p:"morno", rv:19, r:5, b:"Palhano 1", w:"5543996637661", wf:"+55 43 99663-7661", st:"instagram_only", url:"https://www.instagram.com/valeriapais.ozonio/", t:"clínica de estética avançada"},
+  {n:"Vivianne de Paula — Biomedicina e Estética", d:"Vivianne", esp:"Biomedicina Estética", sc:36, p:"morno", rv:6, r:5, b:"Centro", w:"5543998400002", wf:"+55 43 99840-0002", st:"instagram_only", url:"https://instagram.com/viviannedepaula_", t:"biomédica esteta"},
+  {n:"Espaço Premium Estética", d:"", esp:"Estética Avançada", sc:36, p:"morno", rv:6, r:5, b:"Palhano 2", w:"5543999883773", wf:"+55 43 99988-3773", st:"instagram_only", url:"https://www.instagram.com/espacopremiumestetica/", t:"preenchimento facial"},
+  {n:"NUTROSTETICA", d:"", esp:"Estética + Nutrição", sc:36, p:"morno", rv:17, r:5, b:"Palhano 1", w:"5543991676381", wf:"+55 43 99167-6381", st:"instagram_only", url:"https://instagram.com/nutrostetica", t:"preenchimento facial"},
+];
+
+// =============================================================
+// MENSAGEM PERSONALIZADA — gerada dinamicamente por lead
+// =============================================================
+function genMessage(L) {
+  const saudacao = L.d ? `Oi, Dra. ${L.d}!` : `Oi, tudo bem?`;
+  let elogio = "";
+  if (L.rv >= 30 && L.r >= 4.8) {
+    elogio = ` Vi seu Google — ${L.rv} avaliações com ${L.r} estrelas, é número de quem entrega resultado de verdade.`;
+  } else if (L.rv >= 15) {
+    elogio = ` Vi seu trabalho no Google e suas avaliações (${L.r} estrelas) — dá pra ver que sua clientela confia muito em você.`;
+  } else {
+    elogio = ` Vi seu trabalho no Google.`;
+  }
+  let observ = "";
+  const buscaTermo = L.t.toLowerCase();
+  if (L.st === "no_site") {
+    observ = ` Reparei que sua clínica ainda não tem um site próprio — só o perfil do Maps e o Instagram. Pra clientela que já te conhece tudo bem, mas pra quem pesquisa "${buscaTermo} Londrina" no Google e cai em concorrente com landing page, é lead que está escapando todo dia.`;
+  } else if (L.st === "linktree") {
+    observ = ` Notei que o link do seu Google é um Linktree/atalho de WhatsApp. Funciona, mas quem chega frio não vê prova social, antes-e-depois, nem agendamento direto — desiste no caminho.`;
+  } else if (L.st === "instagram_only") {
+    observ = ` Notei que o "site" no seu Google manda direto pro seu Instagram. Ajuda quem já te segue, mas pra cliente novo que pesquisa procedimento no Google é zero conversão — ela não vai virar seguidora pra depois agendar.`;
+  } else {
+    observ = ` Dei uma olhada no seu site e quero te mostrar 2-3 ajustes rápidos que podem aumentar bem a conversão.`;
+  }
+  const cta = ` Posso te mandar uma análise rápida em vídeo de 3 min mostrando o que sua concorrência em Londrina está fazendo de diferente e como uma landing simples (que entrego em até 7 dias) resolve isso? Se não fizer sentido, sem problema.`;
+  return (saudacao + elogio + observ + cta).replace(/\s*(?:\u2013|\u2014|---)\s*/g, ", ");
+}
+
+function genPain(L) {
+  const buscaTermo = L.t.toLowerCase();
+  if (L.st === "no_site") return `Não tem site próprio. Cliente que pesquisa "${buscaTermo} Londrina" no Google e cai em concorrente com landing perde o agendamento. Todo dia.`;
+  if (L.st === "linktree") return `Tem só um Linktree/wa.me como destino. Quem chega frio do Instagram não vê identidade, prova social, nem CTA forte — a maioria desiste antes de mandar mensagem.`;
+  if (L.st === "instagram_only") return `O "site" linkado no Google é o próprio Instagram. Lead frio que pesquisa procedimento não tem pra onde ir, e quando vai pro IG não tem trilha pra agendar.`;
+  return `Tem site próprio mas pode estar perdendo conversão por estrutura/copy/velocidade.`;
+}
+
+function siteLabel(st) {
+  return {no_site: "❌ SEM SITE", linktree: "🔗 SÓ LINKTREE", instagram_only: "📱 SÓ INSTAGRAM", site_proprio: "🌐 site próprio"}[st] || st;
+}
+
+const contacted = new Set();
+let activeFilter = "all";
+let searchQuery = "";
+
+function render() {
+  const grid = document.getElementById("grid");
+  grid.innerHTML = "";
+  const q = searchQuery.toLowerCase();
+  const filtered = LEADS.filter(L => {
+    if (activeFilter === "quente" && L.p !== "quente") return false;
+    if (activeFilter === "morno" && L.p !== "morno") return false;
+    if (activeFilter === "pending" && contacted.has(L.w)) return false;
+    if (q && !(L.n.toLowerCase().includes(q) || L.b.toLowerCase().includes(q) || L.esp.toLowerCase().includes(q))) return false;
+    return true;
+  });
+  if (filtered.length === 0) {
+    grid.innerHTML = '<div class="empty">Nenhum lead nessa visualização.</div>';
+    return;
+  }
+  filtered.forEach(L => {
+    const msg = genMessage(L);
+    const pain = genPain(L);
+    const isContacted = contacted.has(L.w);
+    const card = document.createElement("div");
+    card.className = "card" + (isContacted ? " contacted" : "");
+    card.innerHTML = `
+      <div class="card-top">
+        <div class="card-name">${L.n}</div>
+        <span class="badge ${L.p}">${L.p === "quente" ? "🔥 Quente" : "🟧 Morno"}</span>
+      </div>
+      <span class="specialty">${L.esp}</span>
+      <div class="meta">
+        <span><span class="star">★</span> ${L.r} (${L.rv} avaliações)</span>
+        <span>📍 ${L.b}</span>
+        <span>Score: ${L.sc}</span>
+      </div>
+      <div class="site-status">Status digital: <span class="tag ${L.st}">${siteLabel(L.st)}</span>${L.url ? ` · <a class="ig-link" href="${L.url}" target="_blank">${L.url.replace(/^https?:\/\//,'').slice(0,40)}…</a>` : ""}</div>
+      <div class="pain-box"><strong>Dor identificada</strong>${pain}</div>
+      <div class="actions">
+        <a class="btn btn-wa" href="https://wa.me/${L.w}?text=${encodeURIComponent(msg)}" target="_blank" data-w="${L.w}">💬 ${L.wf}</a>
+        <button class="btn btn-copy" data-msg="${msg.replace(/"/g, '&quot;')}">📋 Copiar msg</button>
+      </div>
+      <button class="btn btn-done ${isContacted ? "active" : ""}" data-w="${L.w}">${isContacted ? "✓ Marcado como contatado" : "Marcar como contatado"}</button>
+    `;
+    grid.appendChild(card);
+  });
+  updateStats();
+}
+
+function updateStats() {
+  document.getElementById("stat-total").textContent = LEADS.length;
+  document.getElementById("stat-quente").textContent = LEADS.filter(l => l.p === "quente").length;
+  document.getElementById("stat-morno").textContent = LEADS.filter(l => l.p === "morno").length;
+  document.getElementById("stat-done").textContent = contacted.size;
+}
+
+function showToast(text) {
+  const t = document.getElementById("toast");
+  t.textContent = text;
+  t.classList.add("show");
+  setTimeout(() => t.classList.remove("show"), 1800);
+}
+
+document.addEventListener("click", e => {
+  const wa = e.target.closest(".btn-wa");
+  if (wa) {
+    const w = wa.dataset.w;
+    if (w) contacted.add(w);
+    setTimeout(() => render(), 200);
+    return;
+  }
+  const copy = e.target.closest(".btn-copy");
+  if (copy) {
+    navigator.clipboard.writeText(copy.dataset.msg).then(() => showToast("Mensagem copiada"));
+    return;
+  }
+  const done = e.target.closest(".btn-done");
+  if (done) {
+    const w = done.dataset.w;
+    if (contacted.has(w)) contacted.delete(w);
+    else contacted.add(w);
+    render();
+    return;
+  }
+  const fb = e.target.closest(".filter-btn");
+  if (fb) {
+    document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+    fb.classList.add("active");
+    activeFilter = fb.dataset.filter;
+    render();
+    return;
+  }
+  if (e.target.id === "exportBtn") {
+    const headers = ["score","prioridade","clinica","dona","especialidade","whatsapp","status_site","url_atual","bairro","avaliacoes","nota","gancho","mensagem"];
+    const rows = LEADS.map(L => [L.sc, L.p, L.n, L.d, L.esp, L.wf, L.st, L.url, L.b, L.rv, L.r, genPain(L), genMessage(L)]);
+    const csv = [headers, ...rows].map(r => r.map(c => `"${String(c).replace(/"/g,'""')}"`).join(",")).join("\n");
+    const blob = new Blob(["﻿" + csv], {type: "text/csv;charset=utf-8"});
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "leads_estetica_londrina.csv";
+    a.click();
+    showToast("CSV baixado");
+  }
+});
+
+document.getElementById("search").addEventListener("input", e => {
+  searchQuery = e.target.value;
+  render();
+});
+
+render();
+</script>
+
+</body>
+</html>
